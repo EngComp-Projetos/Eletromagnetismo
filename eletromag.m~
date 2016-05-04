@@ -1,5 +1,5 @@
-IE = 500;
-JE = 500;    
+IE = 200;
+JE = 200;    
 
 D = 0.015; % D=dx=dy
 cluz = 2.99792458e8;
@@ -21,14 +21,12 @@ jc = JE/2;
  hy=zeros(IE,JE);
  hx=zeros(IE,JE);
            
+
  t0=20.0;
  spread=6.0;
 
  nsteps = 500;
 
- J = 1000;   % Amplitude do pulso  A/m
- stigma = 32;
- alfa = (4/stigma*dt)^2;
 
  for n=1:1:nsteps % /*	Loop do Tempo n	  */
 
@@ -45,11 +43,12 @@ jc = JE/2;
      end
 
     %pulse = exp(-0.5*((t0-n)/spread)^2); %/* fonte de excitação */
-
+    J = 1000;   % Amplitude do pulso  A/m
+    stigma = 32;
+    alfa = (4/stigma*dt)^2;
     
-    if n <= 20
-        ez(ic,jc) = J*exp(-1*alfa*(n-stigma*dt)^2);
-    end
+    ez(ic,jc) = 
+    
 % //cond. de contorno:  bloco metalico
 % 
 % /*
