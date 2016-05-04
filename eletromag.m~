@@ -1,0 +1,111 @@
+
+IE = 300;
+JE = 300;
+
+     
+     D = 0.015; % D=dx=dy
+     
+      cluz = 2.99792458e8;
+      mi0 	= (4.e-7)*pi;
+      
+      eps0 	= (1.e-9)/(36.*pi);
+      
+      dt = 0.99*(D/(sqrt(2.e0)*cluz));
+
+
+%/*	coodenadas da fonte de excitação	*/
+
+     ic = IE/2;
+     jc = JE/2;
+
+
+%/*	inicialização dos campos ( = zero)		*/
+
+ ez=zeros(IE,JE);
+ hy=zeros(IE,JE);
+ hx=zeros(IE,JE);
+           
+
+ t0=20.0;
+ spread=6.0;
+
+ nsteps = 500;
+
+
+     for n=1:1:nsteps % /*	Loop do Tempo n	  */
+
+
+% /*
+%   				    Cálculo do campo E  
+% 	 (depois do campo H ser calculado em todos os pontos no passo anterior)
+% */
+
+         for j=2:1:JE-2
+             for i=2:1:IE-2
+                	ez(i,j) = ez(i,j) + dt/eps0 * (hy(i,j) - hy(i-1,j) - hx(i,j) + hx(i,j-1))/D;
+             end
+         end
+
+         pulse = exp(-0.5*pow((t0-n)/spread,2.0)); %/* fonte de excitação */
+         ez(ic,jc) = pulse;
+
+
+
+% //cond. de contorno:  bloco metalico
+% 
+% /*
+% 	for (j=jc-15;j<=jc+15;j++){
+% 	  ez[ic-15-5][j] = 0.0;
+% 	}
+% 
+% 
+% 	for (j=jc-15;j<=jc+15;j++){
+% 	  ez[ic-15+5][j] = 0.0;
+% 	}
+% 
+% 
+% 	for (i=ic-15-5;i<=ic-15+5;i++){
+% 	  ez[i][jc-15] = 0.0;
+% 	}
+% 
+% 	for (i=ic-15-5;i<=ic-15+5;i++){
+% 	  ez[i][jc+15] = 0.0;
+% 	}
+% */
+
+
+% ////////////////////////////////////////////////////////////////
+
+
+
+% /*  				Cálculo do campo H
+% 	    (depois do campo E ser calculado em todos os pontos)
+% */
+
+
+         for j=1:1:JE-2
+             for i=1:1:IE-2
+                	hx(i,j) = hx(i,j) + dt/mi0*(ez(i,j) -ez(i,j+1))/D;
+                	hy(i,j) = hy(i,j) + dt/mi0*(ez(i+1,j)-ez(i,j))/D;
+             end
+         end
+    
+         imagesc(D*1e+6*(1:1:IE),(D*1e+6*(1:1:JE))',ez',[-1,1]);colorbar;
+        title(['\fontsize{20}Colour-scaled image plot of Ez in a spatial domain with PML boundary and at time = ',num2str(round(n*dt*1e+15)),' fs']); 
+        xlabel('x (in um)','FontSize',20);
+        ylabel('y (in um)','FontSize',20);
+        set(gca,'FontSize',20);
+        getframe;
+
+
+
+
+
+    end  %//fim do loop do tempo
+
+
+
+
+
+
+
