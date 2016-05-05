@@ -1,8 +1,8 @@
 clear all;
 clc;
 
-IE = 200;
-JE = 200;
+IE = 4000;
+JE = 4000;
 
 D = 0.015; % D=dx=dy
 
@@ -31,10 +31,6 @@ jc = JE/2;
  spread=6.0;
 
  nsteps = 500;
- 
- A=JE*57.5/100;
- B=JE*72.5/100;
- 
 
  for n=1:1:nsteps % Loop do Tempo n	
 
@@ -50,48 +46,45 @@ jc = JE/2;
          end
      end
 
-
-    
-     for j=2:1:JE-2
-         for i=2:1:IE-2
-                ez(i,j) = ez(i,j) + dt/eps0 * (hy(i,j) - hy(i-1,j) - hx(i,j) + hx(i,j-1))/D;
-         end
-     end
-     
-     
     for j=JE*57.5/100:1:JE*72.5/100
-        for i=IE*25/100:1:IE*35/100 %Prédio A1
+        for i=1100:1:1400 %Prédio A1
             ez(i,j)=0;
         end
     end     
-     for j=JE*27.5/100:1:JE*42.5/100
-         for i = IE*25/100:1:IE*35/100 % Prédio A2
+     for j=1100:1:1700
+         for i = 1100:1:1400 % Prédio A2
             ez(i,j)=0;
         end
      end
       
      for j=JE*57.5/100:1:JE*72.5/100
-        for i = IE*45/100:1:IE*55/100  %Prédio B1
+        for i = 1800:1:2200  %Prédio B1
             ez(i,j)=0;
         end
      end
      
-     for j=JE*27.5/100:1:JE*42.5/100
-        for i = IE*45/100:1:IE*55/100 %Prédio B2
+     for j=1100:1:1700
+        for i = 1800:1:2200 %Prédio B2
             ez(i,j)=0;
         end
      end
      
       for j=JE*57.5/100:1:JE*72.5/100
-        for i = JE*62.5/100:1:JE*72.5/100 %Prédio C1
+        for i = 2500:1:JE*72.5/100 %Prédio C1
             ez(i,j)=0;
         end
      end
      
-     for j=JE*27.5/100:1:JE*42.5/100          %Prédio C2
-        for i = JE*62.5/100:1:JE*72.5/100  
+     for j=1100:1:1700          %Prédio C2
+        for i = 2500:1:JE*72.5/100  
             ez(i,j)=0;
         end
+     end
+    
+     for j=2:1:JE-2
+         for i=2:1:IE-2
+                ez(i,j) = ez(i,j) + dt/eps0 * (hy(i,j) - hy(i-1,j) - hx(i,j) + hx(i,j-1))/D;
+         end
      end
 
     %pulse = exp(-0.5*((t0-n)/spread)^2); %/* fonte de excitação */
