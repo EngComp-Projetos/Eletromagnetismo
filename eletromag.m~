@@ -4,17 +4,19 @@ clc;
 IE = 400;
 JE = 400;
 
-D = 0.015; % D=dx=dy
+D = 0.0015; % D=dx=dy
 
 cluz = 2.99792458e8;
-mi0 = (4.e-7)*pi;
-eps0 = (1.e-9)/(36.*pi);
+mi0 = (4*10e-7)*pi;
+eps0 = (1*10e-9)/(36*pi);
 
-dt = 0.99*(D/(sqrt(2.e0)*cluz));
+%dt = 0.99*(D/(sqrt(2)*cluz));
+dt = 28.32*10e-12;
 
 J = 1000;   % Amplitude do pulso  A/m
 stigma = 32;
 alfa = (4/stigma*dt)^2;
+
 
 %	coodenadas da fonte de excitação
 
@@ -42,14 +44,24 @@ alfa = (4/stigma*dt)^2;
  jc=JE/2;
  ic=DD;
  
- L1i=IE*32.5/100
+ L1j=JE/2;
+ L1i=IE*32.5/100;
+ L2i=IE/2;
+ L2j=JE/2;
+
+ PL1=zeros(nsteps);
+ PL2=zeros(nsteps);
+ timeArray=zeros(nsteps);
 
  for n=1:1:nsteps % Loop do Tempo n	
 
+    freq = 1/n;
+    lambda = cluz/freq;
+     
     if n <= 20
         ez(ic,jc) = J*exp(-alfa*(n-stigma*dt)^2);
     end
-    
+    %ez(ic,jc) = exp(-0.5*((20-n)/6)^2); %/* fonte de excitação */
     
      for j=1:1:JE-2
          for i=1:1:IE-2
@@ -59,13 +71,17 @@ alfa = (4/stigma*dt)^2;
      end
 
 
-    
      for j=2:1:JE-1
          for i=2:1:IE-1
                 ez(i,j) = ez(i,j) + dt/eps0 * (hy(i,j) - hy(i-1,j) - hx(i,j) + hx(i,j-1))/D;
+                if j==L1j && i==L1i
+                    PL1(n)=10*log10(((ez(i,j)^2)/120*pi)*((lambda^2)/4*pi));
+                end
+                if j==L2j && i==L2i
+                    PL1(n)=10*log10(((ez(i,j)^2)/120*pi)*((lambda^2)/4*pi));
+                end
          end
      end
-     
      
     % construção dos prédios 
  
@@ -104,18 +120,24 @@ alfa = (4/stigma*dt)^2;
             ez(i,j)=0;
         end
      end
+t    
 
-    %pulse = exp(-0.5*((t0-n)/spread)^2); %/* fonte de excitação */
-
-    imagesc(D*1e+6*(1:1:IE),(D*1e+6*(1:1:JE))',ez',[-1,1]);colorbar;
-    title(['\fontsize{20}Colour-scaled image plot of Ez in a spatial domain with PML boundary and at time = ',num2str(round(n*dt*1e+12)),' ps']); 
-    xlabel('x (in um)','FontSize',20);
-    ylabel('y (in um)','FontSize',20);
-    set(gca,'FontSize',20);
-    getframe;
+     imagesc(D*1e+6*(1:1:IE),(D*1e+6*(1:1:JE))',ez',[-1,1]);colorbar;
+     title(['\fontsize{20}Colour-scaled image plot of Ez in a spatial domain with PML boundary and at time = ',num2str(round(n*dt*1e+12)),' ps']); 
+     xlabel('x (in um)','FontSize',20);
+     ylabel('y (in um)','FontSize',20);
+     set(gca,'FontSize',20);
+     frame(n) = getframe;
 
 end  %//fim do loop do tempo
+%movie2avi(frame, 'eletromag.avi');
+fid = fopen('pl1.txt','wt');
+fprintf(fid,'%f\n',PL1);
+fclose(fid);
 
+fid = fopen('pl2.txt','wt');
+fprintf(fid,'%f\n',PL2);
+fclose(fid);
 
 
 
