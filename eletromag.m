@@ -1,7 +1,7 @@
 IE = 500;
 JE = 500;    
 
-D = 0.015; % D=dx=dy
+D = 0.000015; % D=dx=dy
 cluz = 2.99792458e8;
 mi0 	= (4.e-7)*pi;
 
@@ -12,7 +12,7 @@ dt = 0.99*(D/(sqrt(2)*cluz));
 %/*	coodenadas da fonte de excitação	*/
 
 ic = IE/2;
-jc = JE/2;
+jc = 1;
 
 
 %/*	inicialização dos campos ( = zero)		*/
@@ -32,11 +32,17 @@ jc = JE/2;
 
  for n=1:1:nsteps % /*	Loop do Tempo n	  */
 
-
-% /*
-%   				    Cálculo do campo E  
-% 	 (depois do campo H ser calculado em todos os pontos no passo anterior)
-% */
+    if n <= 20
+        ez(ic,jc) = J*exp(-alfa*(n-stigma*dt)^2);
+    end
+    
+    
+     for j=1:1:JE-2
+         for i=1:1:IE-2
+                hx(i,j) = hx(i,j) + dt/mi0*(ez(i,j) -ez(i,j+1))/D;
+                hy(i,j) = hy(i,j) + dt/mi0*(ez(i+1,j)-ez(i,j))/D;
+         end
+     end
 
      for j=2:1:JE-2
          for i=2:1:IE-2
@@ -46,10 +52,12 @@ jc = JE/2;
 
     %pulse = exp(-0.5*((t0-n)/spread)^2); %/* fonte de excitação */
 
-    
-    if n <= 20
-        ez(ic,jc) = J*exp(-1*alfa*(n-stigma*dt)^2);
-    end
+%     for j=jc+100:1:jc+200
+%         for i=ic:1:ic+100
+%             ez(i,j) = 0;
+%         end
+%     end
+
 % //cond. de contorno:  bloco metalico
 % 
 % /*
@@ -72,33 +80,12 @@ jc = JE/2;
 % 	}
 % */
 
-
-% ////////////////////////////////////////////////////////////////
-
-
-
-% /*  				Cálculo do campo H
-% 	    (depois do campo E ser calculado em todos os pontos)
-% */
-
-
-     for j=1:1:JE-2
-         for i=1:1:IE-2
-                hx(i,j) = hx(i,j) + dt/mi0*(ez(i,j) -ez(i,j+1))/D;
-                hy(i,j) = hy(i,j) + dt/mi0*(ez(i+1,j)-ez(i,j))/D;
-         end
-     end
-
-     imagesc(D*1e+6*(1:1:IE),(D*1e+6*(1:1:JE))',ez',[-1,1]);
+     imagesc(D*1e+6*(1:1:IE),(D*1e+6*(1:1:JE))',ez',[-1,1]);colorbar;
     title(['\fontsize{20}Colour-scaled image plot of Ez in a spatial domain with PML boundary and at time = ',num2str(round(n*dt*1e+15)),' fs']); 
     xlabel('x (in um)','FontSize',20);
     ylabel('y (in um)','FontSize',20);
     set(gca,'FontSize',20);
     getframe;
-
-
-
-
 
 end  %//fim do loop do tempo
 
