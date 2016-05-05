@@ -110,10 +110,10 @@ alfa = (4/stigma*dt)^2;
     xlabel('x (in um)','FontSize',20);
     ylabel('y (in um)','FontSize',20);
     set(gca,'FontSize',20);
-    getframe;
+    frame(n) = getframe;
 
 end  %//fim do loop do tempo
-
+movie2avi(frame, 'eletromag.avi');
 
 
 
