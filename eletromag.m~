@@ -42,8 +42,7 @@ alfa = (4/stigma*dt)^2;
  jc=JE/2;
  ic=DD;
  
- L1i=IE/2;
- L1j=JE*32.5/100;
+ L1i=IE*32.5/100
 
  for n=1:1:nsteps % Loop do Tempo n	
 
