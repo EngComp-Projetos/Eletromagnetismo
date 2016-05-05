@@ -1,8 +1,8 @@
 clear all;
 clc;
 
-IE = 200;
-JE = 200;
+IE = 400;
+JE = 400;
 
 D = 0.015; % D=dx=dy
 
@@ -18,8 +18,8 @@ alfa = (4/stigma*dt)^2;
 
 %	coodenadas da fonte de excitação
 
-ic = IE/2;
-jc = JE/2;
+% ic = IE/2;
+% jc = JE/2;
 
 %/*	inicialização dos campos ( = zero)
 
@@ -27,14 +27,20 @@ jc = JE/2;
  hy=zeros(IE,JE);
  hx=zeros(IE,JE);        
 
- t0=20.0;
- spread=6.0;
-
- nsteps = 500;
+ nsteps = 300;
  
  A=JE*57.5/100;
  B=JE*72.5/100;
+ C=IE*25/100;
+ DD=IE*35/100;
+ E=JE*27.5/100;
+ F=JE*42.5/100;
+ G=IE*45/100;
+ H=IE*55/100;
+ I=JE*62.5/100;
  
+ jc=JE/2;
+ ic=DD;
 
  for n=1:1:nsteps % Loop do Tempo n	
 
@@ -59,45 +65,48 @@ jc = JE/2;
      end
      
      
-    for j=JE*57.5/100:1:JE*72.5/100
-        for i=IE*25/100:1:IE*35/100 %Prédio A1
+    % construção dos prédios 
+ 
+    for j=A:1:B
+        for i=C:1:DD %Prédio A1
             ez(i,j)=0;
         end
     end     
-     for j=JE*27.5/100:1:JE*42.5/100
-         for i = IE*25/100:1:IE*35/100 % Prédio A2
+    
+     for j=E:1:F
+         for i = C:1:DD % Prédio A2
             ez(i,j)=0;
         end
      end
       
-     for j=JE*57.5/100:1:JE*72.5/100
-        for i = IE*45/100:1:IE*55/100  %Prédio B1
+     for j=A:1:B
+        for i = G:1:H  %Prédio B1
             ez(i,j)=0;
         end
      end
      
-     for j=JE*27.5/100:1:JE*42.5/100
-        for i = IE*45/100:1:IE*55/100 %Prédio B2
+     for j=E:1:F
+        for i = G:1:H %Prédio B2
             ez(i,j)=0;
         end
      end
      
-      for j=JE*57.5/100:1:JE*72.5/100
-        for i = JE*62.5/100:1:JE*72.5/100 %Prédio C1
+      for j=A:1:B
+        for i = I:1:B %Prédio C1
             ez(i,j)=0;
         end
      end
      
-     for j=JE*27.5/100:1:JE*42.5/100          %Prédio C2
-        for i = JE*62.5/100:1:JE*72.5/100  
+     for j=E:1:F          %Prédio C2
+        for i = I:1:B  
             ez(i,j)=0;
         end
      end
 
     %pulse = exp(-0.5*((t0-n)/spread)^2); %/* fonte de excitação */
 
-     imagesc(D*1e+6*(1:1:IE),(D*1e+6*(1:1:JE))',ez',[-1,1]);colorbar;
-    title(['\fontsize{20}Colour-scaled image plot of Ez in a spatial domain with PML boundary and at time = ',num2str(round(n*dt*1e+15)),' fs']); 
+    imagesc(D*1e+6*(1:1:IE),(D*1e+6*(1:1:JE))',ez',[-1,1]);colorbar;
+    title(['\fontsize{20}Colour-scaled image plot of Ez in a spatial domain with PML boundary and at time = ',num2str(round(n*dt*1e+12)),' ps']); 
     xlabel('x (in um)','FontSize',20);
     ylabel('y (in um)','FontSize',20);
     set(gca,'FontSize',20);
