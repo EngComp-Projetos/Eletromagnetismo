@@ -1,13 +1,17 @@
-IE = 500;
-JE = 500;    
 
+IE = 4000;
+JE = 4000;
+
+     
 D = 0.015; % D=dx=dy
+
 cluz = 2.99792458e8;
 mi0 	= (4.e-7)*pi;
 
 eps0 	= (1.e-9)/(36.*pi);
 
-dt = 0.99*(D/(sqrt(2)*cluz));
+dt = 0.99*(D/(sqrt(2.e0)*cluz));
+
 
 %/*	coodenadas da fonte de excitação	*/
 
@@ -21,14 +25,12 @@ jc = JE/2;
  hy=zeros(IE,JE);
  hx=zeros(IE,JE);
            
+
  t0=20.0;
  spread=6.0;
 
  nsteps = 500;
 
- J = 1000;   % Amplitude do pulso  A/m
- stigma = 32;
- alfa = (4/stigma*dt)^2;
 
  for n=1:1:nsteps % /*	Loop do Tempo n	  */
 
@@ -38,18 +40,54 @@ jc = JE/2;
 % 	 (depois do campo H ser calculado em todos os pontos no passo anterior)
 % */
 
+    for j=2300:1:2900
+        for i=1100:1:1400 %Prédio A1
+            ez(i,j)=0;
+        end
+    end     
+     for j=1100:1:1700
+         for i = 1100:1:1400 % Prédio A2
+            ez(i,j)=0;
+        end
+     end
+      
+     for j=2300:1:2900
+        for i = 1800:1:2200  %Prédio B1
+            ez(i,j)=0;
+        end
+     end
+     
+     for j=1100:1:1700
+        for i = 1800:1:2200 %Prédio B2
+            ez(i,j)=0;
+        end
+     end
+     
+      for j=2300:1:2900
+        for i = 2500:1:2900 %Prédio C1
+            ez(i,j)=0;
+        end
+     end
+     
+     for j=1100:1:1700          %Prédio C2
+        for i = 2500:1:2900  
+            ez(i,j)=0;
+        end
+     end
+     
+     
+     
+
      for j=2:1:JE-2
          for i=2:1:IE-2
                 ez(i,j) = ez(i,j) + dt/eps0 * (hy(i,j) - hy(i-1,j) - hx(i,j) + hx(i,j-1))/D;
          end
      end
 
-    %pulse = exp(-0.5*((t0-n)/spread)^2); %/* fonte de excitação */
-
+    pulse = exp(-0.5*((t0-n)/spread)^2); %/* fonte de excitação */
+    ez(ic,jc) = pulse;
     
-    if n <= 20
-        ez(ic,jc) = J*exp(-1*alfa*(n-stigma*dt)^2);
-    end
+
 % //cond. de contorno:  bloco metalico
 % 
 % /*
