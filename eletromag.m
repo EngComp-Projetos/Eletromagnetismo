@@ -4,31 +4,18 @@ clc;
 IE = 400;
 JE = 400;
 
-<<<<<<< HEAD
-D = 0.015*10; % D=dx=dy
-=======
 D = 0.015; % D=dx=dy
->>>>>>> e1524965f89525459700e0c28339ca691935f0c3
 
 cluz = 2.99792458e8;
 mi0 = (4*10e-7)*pi;
 eps0 = (1*10e-9)/(36*pi);
 
-<<<<<<< HEAD
 % dt = 0.999*(D/(sqrt(2)*cluz));
 dt = 28.32*10e-12;
-
-J = 10;   % Amplitude do pulso  A/m
-stigma = 32;
-alfa = (4/(stigma*dt))^2;
-=======
-dt = 0.999*(D/(sqrt(2)*cluz));
-%dt = 28.32*10e-12;
 
 J = 1000;   % Amplitude do pulso  A/m
 stigma = 32;
 alfa = (4/stigma*dt)^2;
->>>>>>> e1524965f89525459700e0c28339ca691935f0c3
 
 
 %	coodenadas da fonte de excitação
@@ -71,21 +58,12 @@ alfa = (4/stigma*dt)^2;
     freq = 1/(n*dt);
     lambda = cluz/freq;
      
-<<<<<<< HEAD
     if n <= 20
-%         ez(ic,jc) = exp(-0.5*((20-n)/6)^2);
         ez(ic,jc) = J*exp(-alfa*(n*dt-stigma*dt)^2);
-        
-    else ez(ic,jc) = 0;
-        
+    else
+        ez(ic,jc) = 0;
     end
-    %   ez(ic,jc) = J*exp(-alfa*(n-stigma*dt)^2); %/* fonte de excitação */
-=======
-   % if n <= 20
-        ez(ic,jc) = exp(-0.5*((20-n)/6)^2);
-    %end
     %ez(ic,jc) = exp(-0.5*((20-n)/6)^2); %/* fonte de excitação */
->>>>>>> e1524965f89525459700e0c28339ca691935f0c3
     
      for j=1:1:JE-2
          for i=1:1:IE-2
@@ -98,24 +76,11 @@ alfa = (4/stigma*dt)^2;
      for j=2:1:JE-1
          for i=2:1:IE-1
                 ez(i,j) = ez(i,j) + dt/eps0 * (hy(i,j) - hy(i-1,j) - hx(i,j) + hx(i,j-1))/D;
-<<<<<<< HEAD
-               
-                if j==L1j && i==L1i  
-                    if ((ez(i,j)^2)/120*pi)*((lambda^2)/4*pi) ~=0
-                    PL1(n)=10*log10(((ez(i,j)^2)/120*pi)*((lambda^2)/4*pi));
-                    end
-                end
-                if j==L2j && i==L2i
-                    if ((ez(i,j)^2)/120*pi)*((lambda^2)/4*pi) ~=0
-                    PL2(n)=10*log10(((ez(i,j)^2)/120*pi)*((lambda^2)/4*pi));
-                    end
-=======
                 if j==L1j && i==L1i
                     PL1(n)=10*log10(((ez(i,j)^2)/120*pi)*((lambda^2)/4*pi));
                 end
                 if j==L2j && i==L2i
                     PL2(n)=10*log10(((ez(i,j)^2)/120*pi)*((lambda^2)/4*pi));
->>>>>>> e1524965f89525459700e0c28339ca691935f0c3
                 end
          end
      end
@@ -160,11 +125,7 @@ alfa = (4/stigma*dt)^2;
      end
      timeArray(n) =  n*dt*1e+9;   
 
-<<<<<<< HEAD
-     imagesc(D*1e+6*(1:1:IE),(D*1e+6*(1:1:JE))',ez');colorbar;
-=======
-     imagesc(D*1e+6*(1:1:IE),(D*1e+6*(1:1:JE))',ez',[-1,1]);colorbar;
->>>>>>> e1524965f89525459700e0c28339ca691935f0c3
+     imagesc(D*1e+6*(1:1:IE),(D*1e+6*(1:1:JE))',ez',[-300,300]);colorbar;
      title(['\fontsize{20}Colour-scaled image plot of Ez in a spatial domain with PML boundary and at time = ',num2str(round(n*dt*1e+9)),' ns']); 
      xlabel('x (in um)','FontSize',20);
      ylabel('y (in um)','FontSize',20);
@@ -180,15 +141,6 @@ fid = fopen('pl2.txt','wt');
 fprintf(fid,'%f\n',PL2);
 fclose(fid);
 
-<<<<<<< HEAD
-% fid = fopen('timearray.txt','wt');
-% fprintf(fid,'%f\n',timeArray);
-% fclose(fid);
-=======
 fid = fopen('timearray.txt','wt');
 fprintf(fid,'%f\n',timeArray);
 fclose(fid);
->>>>>>> e1524965f89525459700e0c28339ca691935f0c3
-
-
-
