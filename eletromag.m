@@ -10,8 +10,8 @@ cluz = 2.99792458e8;
 mi0 = (4*10e-7)*pi;
 eps0 = (1*10e-9)/(36*pi);
 
-%dt = 0.999*(D/(sqrt(2)*cluz));
-dt = 28.32*10e-12;
+dt = 0.999*(D/(sqrt(2)*cluz));
+%dt = 28.32*10e-12;
 
 J = 1000;   % Amplitude do pulso  A/m
 stigma = 32;
@@ -49,18 +49,18 @@ alfa = (4/stigma*dt)^2;
  L2i=IE/2;
  L2j=JE/2;
 
- PL1=zeros(nsteps);
- PL2=zeros(nsteps);
+ %PL1=zeros(nsteps);
+ %PL2=zeros(nsteps);
  timeArray=zeros(nsteps);
 
  for n=1:1:nsteps % Loop do Tempo n	
 
-    freq = 1/n;
+    freq = 1/(n*dt);
     lambda = cluz/freq;
      
-    if n == 1
-        ez(ic,jc) = J*exp(-alfa*(n-stigma*dt)^2);
-    end
+   % if n <= 20
+        ez(ic,jc) = exp(-0.5*((20-n)/6)^2);
+    %end
     %ez(ic,jc) = exp(-0.5*((20-n)/6)^2); %/* fonte de excitação */
     
      for j=1:1:JE-2
@@ -78,10 +78,11 @@ alfa = (4/stigma*dt)^2;
                     PL1(n)=10*log10(((ez(i,j)^2)/120*pi)*((lambda^2)/4*pi));
                 end
                 if j==L2j && i==L2i
-                    PL1(n)=10*log10(((ez(i,j)^2)/120*pi)*((lambda^2)/4*pi));
+                    PL2(n)=10*log10(((ez(i,j)^2)/120*pi)*((lambda^2)/4*pi));
                 end
          end
      end
+     
      
     % construção dos prédios 
  
@@ -128,7 +129,6 @@ alfa = (4/stigma*dt)^2;
      ylabel('y (in um)','FontSize',20);
      set(gca,'FontSize',20);
      frame(n) = getframe;
-
 end  %//fim do loop do tempo
 %movie2avi(frame, 'eletromag.avi');
 fid = fopen('pl1.txt','wt');
@@ -142,10 +142,6 @@ fclose(fid);
 fid = fopen('timearray.txt','wt');
 fprintf(fid,'%f\n',timeArray);
 fclose(fid);
-
-
-
-
 
 
 
