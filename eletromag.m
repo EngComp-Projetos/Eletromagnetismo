@@ -49,8 +49,8 @@ alfa = (4/stigma*dt)^2;
  L2i=IE/2;
  L2j=JE/2;
 
- %PL1=zeros(nsteps);
- %PL2=zeros(nsteps);
+ PL1=zeros(nsteps);
+ PL2=zeros(nsteps);
  timeArray=zeros(nsteps);
 
  for n=1:1:nsteps % Loop do Tempo n	
@@ -77,10 +77,14 @@ alfa = (4/stigma*dt)^2;
          for i=2:1:IE-1
                 ez(i,j) = ez(i,j) + dt/eps0 * (hy(i,j) - hy(i-1,j) - hx(i,j) + hx(i,j-1))/D;
                 if j==L1j && i==L1i
-                    PL1(n)=10*log10(((ez(i,j)^2)/120*pi)*((lambda^2)/4*pi));
-                end
+                    if ((ez(i,j)^2)/120*pi)*((lambda^2)/4*pi) ~=0
+                        PL1(n)=10*log10(((ez(i,j)^2)/120*pi)*((lambda^2)/4*pi));
+                    end
+                end    
                 if j==L2j && i==L2i
-                    PL2(n)=10*log10(((ez(i,j)^2)/120*pi)*((lambda^2)/4*pi));
+                    if ((ez(i,j)^2)/120*pi)*((lambda^2)/4*pi) ~=0
+                        PL2(n)=10*log10(((ez(i,j)^2)/120*pi)*((lambda^2)/4*pi));
+                    end
                 end
          end
      end
