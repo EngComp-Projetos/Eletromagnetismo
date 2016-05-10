@@ -149,8 +149,7 @@ fid = fopen('timearray.txt','wt');
 fprintf(fid,'%f\n',timeArray);
 fclose(fid);
 for i=9:1:400
-potencia1(i-8) = PL1(i);
-potencia2(i-8) = PL2(i);
+potencia1(i) = PL1(i); 
 end
-espaco = linspace(0,391,392);
+espaco = linspace(0,399,400);
 plot(espaco, potencia1);
